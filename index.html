@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Othello Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Othello Game</h1>
+        <div id="settings">
+            <label for="character-type">Select Character Type:</label>
+            <select id="character-type">
+                <option value="hiragana">Hiragana</option>
+                <option value="katakana">Katakana</option>
+                <option value="both">Both</option>
+            </select>
+
+            <label for="tenten-maru">Add Grammatical Marks:</label>
+            <input type="checkbox" id="tenten"> TenTen
+            <input type="checkbox" id="maru"> Maru
+        </div>
+        
+        <div id="scoreboard">
+            <p>Black: <span id="black-score">0</span></p>
+            <p>White: <span id="white-score">0</span></p>
+        </div>
+
+        <p id="turn-indicator">Turn: Black</p>
+
+        <div id="board"></div>
+
+        <div id="winner-message"></div>
+
+        <p id="no-moves" style="display:none;"></p>
+    </div>
+
+    <script src="othello.js"></script>
+</body>
+</html>
