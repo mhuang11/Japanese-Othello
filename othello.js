@@ -91,8 +91,19 @@ function updateCharacterPool() {
 }
 
 function getRandomCharacter() {
-    // Ensure each square gets a character
-    const availablePool = [...characterPool];
+    // Ensure each square gets a character, with at most two occurrences
+    let availablePool = [...characterPool];
+    let charCount = {};
+
+    // Count the occurrences of each character on the board
+    board.forEach(row => row.forEach(cell => {
+        if (cell) {
+            charCount[cell] = (charCount[cell] || 0) + 1;
+        }
+    }));
+
+    // Filter available characters to ensure none appear more than twice
+    availablePool = availablePool.filter(char => (charCount[char] || 0) < 2);
 
     return availablePool[Math.floor(Math.random() * availablePool.length)];
 }
@@ -220,7 +231,6 @@ function isValidMove(row, col) {
 
 function flipPieces(row, col) {
     const opponent = currentTurn === "black" ? "white" : "black";
-
     const directions = [
         { dr: -1, dc: 0 }, { dr: 1, dc: 0 },  // Up and Down
         { dr: 0, dc: -1 }, { dr: 0, dc: 1 },  // Left and Right
@@ -233,15 +243,18 @@ function flipPieces(row, col) {
         let c = col + dc;
         let piecesToFlip = [];
 
+        // Look in the direction until we find an empty square or a piece of the same color
         while (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE) {
             if (board[r][c] === null) break;
             if (board[r][c] === opponent) {
                 piecesToFlip.push([r, c]);
             } else if (board[r][c] === currentTurn) {
-                // Flip the pieces in between
-                piecesToFlip.forEach(([flipRow, flipCol]) => {
-                    board[flipRow][flipCol] = currentTurn;
-                });
+                // We found a piece of the same color, flip the pieces in between
+                if (piecesToFlip.length > 0) {
+                    piecesToFlip.forEach(([flipRow, flipCol]) => {
+                        board[flipRow][flipCol] = currentTurn;
+                    });
+                }
                 break;
             } else {
                 break;
@@ -254,27 +267,31 @@ function flipPieces(row, col) {
 }
 
 function updateScore() {
-    let blackScore = 0;
-    let whiteScore = 0;
-
-    for (let row = 0; row < BOARD_SIZE; row++) {
-        for (let col = 0; col < BOARD_SIZE; col++) {
-            if (board[row][col] === "black") blackScore++;
-            if (board[row][col] === "white") whiteScore++;
-        }
-    }
-
-    blackScoreElement.textContent = `Black: ${blackScore}`;
-    whiteScoreElement.textContent = `White: ${whiteScore}`;
+    const blackCount = board.flat().filter(cell => cell === "black").length;
+    const whiteCount = board.flat().filter(cell => cell === "white").length;
+    blackScoreElement.textContent = `Black: ${blackCount}`;
+    whiteScoreElement.textContent = `White: ${whiteCount}`;
 }
 
 function checkGameOver() {
-    const blackScore = parseInt(blackScoreElement.textContent.split(":")[1]);
-    const whiteScore = parseInt(whiteScoreElement.textContent.split(":")[1]);
+    const totalPieces = board.flat().filter(cell => cell !== null).length;
 
-    if (blackScore + whiteScore === BOARD_SIZE * BOARD_SIZE) {
-        const winner = blackScore > whiteScore ? "Black" : "White";
-        winnerMessageElement.textContent = `${winner} wins!`;
+    if (totalPieces === BOARD_SIZE * BOARD_SIZE) {
+        const blackCount = board.flat().filter(cell => cell === "black").length;
+        const whiteCount = board.flat().filter(cell => cell === "white").length;
+
+        if (blackCount > whiteCount) {
+            winnerMessageElement.textContent = "Black wins!";
+        } else if (whiteCount > blackCount) {
+            winnerMessageElement.textContent = "White wins!";
+        } else {
+            winnerMessageElement.textContent = "It's a draw!";
+        }
+
+        noMovesElement.style.display = "block";
+    } else {
+        winnerMessageElement.textContent = "";
+        noMovesElement.style.display = "none";
     }
 }
 

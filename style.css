@@ -9,56 +9,56 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height to center vertically */
+    height: 100vh;
 }
 
 #game-container {
     display: flex;
-    justify-content: center; /* Center the content horizontally */
-    align-items: center; /* Center the content vertically */
-    gap: 30px; /* Space between the left and right sections */
-    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 30px; /* Increase the gap between the left and right sections */
+    padding: 10px; /* Increase padding */
     background: white;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-    height: 600px; /* Make sure container has enough height */
-    width: 900px; /* Set a fixed width for the whole container */
+    border-radius: 15px; /* Slightly larger rounded corners */
+    height: 700px; /* Increase container height */
+    width: 1150px; /* Increase container width */
 }
 
 /* Left side layout adjustments */
 #left-side {
     display: flex;
-    flex-direction: column; /* Stack content vertically */
-    align-items: center; /* Center align horizontally */
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    gap: 20px; /* Space between items in the left-side column */
-    padding: 10px;
-    width: 250px; /* Set a fixed width for the left side */
-    justify-content: center; /* Center content vertically */
-    height: 100%; /* Take full height of the container */
+    gap: 30px; /* Increase gap */
+    padding: 15px; /* Increase padding */
+    width: 450px; /* Increase the width */
+    justify-content: center;
+    height: 100%;
 }
 
 /* Othello title styling */
 #left-side h1 {
-    font-size: 24px;
+    font-size: 36px; /* Increase the font size */
     margin: 0;
 }
 
 /* Grammatical marks settings */
 #settings label {
     display: block;
-    margin-top: 10px;
+    margin-top: 15px; /* Increase margin */
 }
 
 /* Scoreboard Styling */
 #scoreboard {
-    margin: 10px 0;
-    font-size: 18px;
+    margin: 15px 0;
+    font-size: 17px; /* Reduced font size by 10px */
 }
 
 #scoreboard p {
-    display: inline; /* Keep the score on the same line */
-    margin: 0 10px; /* Add spacing between the scores */
+    display: inline;
+    margin: 0 15px; /* Increase margin */
 }
 
 #scoreboard span {
@@ -67,7 +67,7 @@ body {
 
 /* Turn indicator */
 #turn-indicator {
-    margin: 10px 0;
+    margin: 15px 0;
     font-weight: bold;
 }
 
@@ -81,11 +81,13 @@ body {
 #board {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
-    width: 400px; /* Make board a square with fixed width and height */
-    height: 400px; /* Ensure it's a perfect square */
-    border: 1px solid #004000;
-    border-radius: 10px;
+    width: 600px; /* Increase board size */
+    height: 600px; /* Increase board size */
+    border: 5px solid #004000;
+    border-radius: 15px; /* Larger border radius */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1;
 }
 
 .square {
@@ -95,11 +97,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 18px; /* Increase font size */
     font-weight: bold;
     text-align: center;
     color: white;
     background-color: #008200;
+    z-index: 0;
 }
 
 .square:nth-child(odd) {
@@ -113,74 +116,70 @@ body {
 /* Character and Number Styling */
 .square .number,
 .square .character {
-    opacity: 1; /* Default opacity for number and character */
-    transition: opacity 0.3s ease; /* Smooth transition for opacity changes */
-    z-index: 2; /* Ensure the text is on top of the pieces */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 2;
 }
 
 .square .number {
     position: absolute;
-    font-size: 12px;
-    text-shadow: 1px 1px 1px black;
-    margin-top: -28px; /* Shift numbers 15px up */
+    font-size: 18px; /* Increase font size */
+    text-shadow: 2px 2px 2px black;
+    margin-top: -40px; /* Adjust to shift numbers up */
 }
 
 .square .character {
     position: absolute;
-    font-size: 24px;
-    text-shadow: 1px 1px 1px black;
+    font-size: 36px; /* Increase character font size */
+    text-shadow: 2px 2px 2px black;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    transition: margin-right 0.1s ease, margin-top 0.1s ease; /* Smooth transition for margin-right and margin-top */
-    margin-top: 15px; /* Shift characters 5px down */
+    transition: margin-right 0.1s ease, margin-top 0.1s ease;
+    margin-top: 22px; /* Increase margin */
 }
 
-/* If there's an Othello piece, decrease opacity for all squares (except the middle 4) */
+/* If there's an Othello piece, decrease opacity for all squares */
 .square.has-piece .number,
 .square.has-piece .character {
-    opacity: 0.3; /* 30% opacity when there is an Othello piece */
+    opacity: 0.3;
 }
 
-/* Special rule for the middle 4 squares (positions 28, 29, 36, 37) */
-.square:nth-child(28), /* 4th row, 4th column */
-.square:nth-child(29), /* 4th row, 5th column */
-.square:nth-child(36), /* 5th row, 4th column */
-.square:nth-child(37) { /* 5th row, 5th column */
-    /* Keep number and character behind pieces */
+/* Special rule for the middle 4 squares */
+.square:nth-child(28), .square:nth-child(29), .square:nth-child(36), .square:nth-child(37) {
     .number, .character {
-        opacity: 0.3; /* 30% opacity */
-        z-index: 0; /* Ensure text is behind the piece */
+        opacity: 0.3;
+        z-index: 0;
     }
 }
 
 /* New rule for squares with Othello pieces */
 .piece {
-    width: 80%;
-    height: 80%;
+    width: 80%; /* Decreased piece size to cover 80% of the square */
+    height: 80%; /* Decreased piece size to cover 80% of the square */
     border-radius: 50%;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
     position: absolute;
-    z-index: 1; /* Make sure pieces are in front of the text */
+    z-index: 1;
 }
 
 .piece.black {
-    border: 2px solid #000;
+    border: 3px solid #000;
     background: linear-gradient(to bottom, #353535, #181818);
 }
 
 .piece.white {
-    border: 2px solid #bababa;
+    border: 3px solid #bababa;
     background: linear-gradient(to bottom, #afafaf, #ebebeb);
 }
 
 /* Valid move indicator */
 .valid-move {
     border-radius: 50%;
-    width: 80%;
-    height: 80%;
-    border: 2px solid #006f00;
+    width: 120%; /* Increase size */
+    height: 120%; /* Increase size */
+    border: 3px solid #006f00;
     position: absolute;
 }
