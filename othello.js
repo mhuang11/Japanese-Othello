@@ -274,9 +274,12 @@ function updateScore() {
 }
 
 function checkGameOver() {
-    const totalPieces = board.flat().filter(cell => cell !== null).length;
+    // Check if there are valid moves for both players
+    const blackHasValidMove = hasValidMove("black");
+    const whiteHasValidMove = hasValidMove("white");
 
-    if (totalPieces === BOARD_SIZE * BOARD_SIZE) {
+    // If neither player has a valid move, the game is over
+    if (!blackHasValidMove && !whiteHasValidMove) {
         const blackCount = board.flat().filter(cell => cell === "black").length;
         const whiteCount = board.flat().filter(cell => cell === "white").length;
 
@@ -293,6 +296,54 @@ function checkGameOver() {
         winnerMessageElement.textContent = "";
         noMovesElement.style.display = "none";
     }
+}
+
+function hasValidMove(player) {
+    for (let row = 0; row < BOARD_SIZE; row++) {
+        for (let col = 0; col < BOARD_SIZE; col++) {
+            if (isValidMoveForPlayer(row, col, player)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function isValidMoveForPlayer(row, col, player) {
+    if (board[row][col] !== null) return false;
+
+    const opponent = player === "black" ? "white" : "black";
+    const directions = [
+        { dr: -1, dc: 0 }, { dr: 1, dc: 0 },  // Up and Down
+        { dr: 0, dc: -1 }, { dr: 0, dc: 1 },  // Left and Right
+        { dr: -1, dc: -1 }, { dr: -1, dc: 1 }, // Diagonal Up-left and Up-right
+        { dr: 1, dc: -1 }, { dr: 1, dc: 1 },  // Diagonal Down-left and Down-right
+    ];
+
+    for (const { dr, dc } of directions) {
+        let r = row + dr;
+        let c = col + dc;
+        let piecesToFlip = [];
+
+        // Look in the direction until we find an empty square or a piece of the same color
+        while (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE) {
+            if (board[r][c] === null) break;
+            if (board[r][c] === opponent) {
+                piecesToFlip.push([r, c]);
+            } else if (board[r][c] === player) {
+                // We found a piece of the same color, flip the pieces in between
+                if (piecesToFlip.length > 0) return true;
+                break;
+            } else {
+                break;
+            }
+
+            r += dr;
+            c += dc;
+        }
+    }
+
+    return false;
 }
 
 initializeBoard();
